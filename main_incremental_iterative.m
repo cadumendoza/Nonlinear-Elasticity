@@ -9,7 +9,7 @@ global mod1 mesh1 load1 el1 undeformed1
 % 4: arch, dead load at center of the arch
 % 5: arch, dead load near the supports
 example=0;
-material=1;
+material=3;
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material);
 
 %Equilibrate
@@ -20,17 +20,17 @@ options.info=3;
 options.method=0; %0: vanilla Newton-Rapshon, 1: Newton-Rapshon
 %11: Modified NR, 2: L-BFGS, 3: Conjugate Gradient
 options.linesearch=1; % 0: off, 1: on. For method 3, automatically on.
-options.CGv = 2; %Method 3 is needed  (1: Fletcher-Reeves, 2: Polak-Ribiere) IRRELEVANT
-options.L=8; %Method 2 is needed: value of L for L-BFGS IRRELEVANT
-options.prec=1; % Preconditioner for methods 2&3 (0: No Active, 1: Active) IRRELEVANT
+options.CGv = 2; %Method 3 is needed  (1: Fletcher-Reeves, 2: Polak-Ribiere)
+options.L=8; %Method 2 is needed: value of L for L-BFGS
+options.prec=1; % Preconditioner for methods 2&3 (0: No Active, 1: Active)
 
 
 % Options for Line Search
 options.n_iter_max_LS=30; % Maximum number of iterations for Line Search
 options.type_LS=2; % 1: Backtracking, 2: Matlab
 options.TolX=1.e-2;     % For Matlab line search
-options.alfa=0.3; % For backtracking IRRELEVANT
-options.beta = .8; % For backtracking IRRELEVANT
+options.alfa=0.3; % For backtracking
+options.beta = .8; % For backtracking
 
 %Setup the undeformed configuration
 precompute;
@@ -55,7 +55,7 @@ for iload=1:length(lambda)
 
     %Solve the equilibrium nonlinear system of equations
     [x_eq,iflag,iter,E_eq] = Equilibrate(x,options);
-    [E_eq,grad_eq] = Energy(x_eq,2);
+    [E_eq,grad_eq] = Energy(x_eq,3);
     history_E(iload)=E_eq;
     history_x(iload,:)=x_eq;
     switch example

@@ -86,7 +86,7 @@ switch material
     case 1
       mod1.potential = 1; % 1 is Neohookean
       mod1.mu=1;
-      mod1.lambda=100; %not too large
+      mod1.lambda=100;
     case 2
       mod1.potential = 2; % 2 is transversely isotropic model
       mod1.mu=1.;
@@ -96,9 +96,9 @@ switch material
       theta=pi/6;
       mod1.N_fib=[cos(theta); sin(theta)];
     case 3
-      mod1.potential = 3; % 1 is KsV
+      mod1.potential = 1; % 1 is Neohookean
       mod1.mu=1;
-      mod1.lambda=100; %not too large
+      mod1.lambda=100;
     otherwise
         error('Material not implemented')
 end

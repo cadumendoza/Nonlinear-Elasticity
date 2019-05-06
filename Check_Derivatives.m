@@ -8,7 +8,7 @@ global mod1 mesh1 load1 el1 undeformed1
 
 
 example=0;
-material=1;
+material=3;
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material);
 load1.force = force*lambda(1); % include external forces
 
