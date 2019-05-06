@@ -1,3 +1,3 @@
-function ener = Ener_1D(t,x,p)
+function energy = Ener_1D(t,x,p)
 
-% for you to write
+energy = Ener_short(x+t*p,1);

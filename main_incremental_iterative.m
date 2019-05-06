@@ -9,7 +9,7 @@ global mod1 mesh1 load1 el1 undeformed1
 % 4: arch, dead load at center of the arch
 % 5: arch, dead load near the supports
 example=0;
-material=3;
+material=2;
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material);
 
 %Equilibrate
@@ -17,7 +17,7 @@ options.n_iter_max=80;
 options.tol_x=1.e-6;
 options.tol_f=1.e-6;
 options.info=3;
-options.method=0; %0: vanilla Newton-Rapshon, 1: Newton-Rapshon
+options.method=1; %0: vanilla Newton-Rapshon, 1: Newton-Rapshon
 %11: Modified NR, 2: L-BFGS, 3: Conjugate Gradient
 options.linesearch=1; % 0: off, 1: on. For method 3, automatically on.
 options.CGv = 2; %Method 3 is needed  (1: Fletcher-Reeves, 2: Polak-Ribiere)

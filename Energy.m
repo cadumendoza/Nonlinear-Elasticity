@@ -37,7 +37,7 @@ for ielem = 1:nelem
                 [W]=transv_isotr_1([C(1,1) C(2,2) C(1,2)],mod1.c0,mod1.c1, ...
                     mod1.kappa,mod1.mu,mod1.N_fib);
             case 3
-                [W]=Ksv_1([C(1,1) C(2,2) C(1,2)],mod1.lambda,mod1.mu,icode);
+                [W]=KsV_1([C(1,1) C(2,2) C(1,2)],mod1.lambda,mod1.mu,icode);
             otherwise
                 error('Potential not implemented')
         end
@@ -67,7 +67,7 @@ for ielem = 1:nelem
                 [W,S]=transv_isotr_2([C(1,1) C(2,2) C(1,2)],mod1.c0,mod1.c1, ...
                     mod1.kappa,mod1.mu,mod1.N_fib);
             case 3
-                [W,S]=Ksv_2([C(1,1) C(2,2) C(1,2)],mod1.lambda,mod1.mu,icode);
+                [W,S]=KsV_2([C(1,1) C(2,2) C(1,2)],mod1.lambda,mod1.mu,icode);
 
             otherwise
                 error('Potential not implemented')
@@ -107,7 +107,7 @@ for ielem = 1:nelem
                 [W,S,CC]=transv_isotr_3([C(1,1) C(2,2) C(1,2)],mod1.c0,mod1.c1, ...
                     mod1.kappa,mod1.mu,mod1.N_fib);
             case 3
-                [W,S,CC]=Ksv_3([C(1,1) C(2,2) C(1,2)],mod1.lambda,mod1.mu,icode);
+                [W,S,CC]=KsV_3([C(1,1) C(2,2) C(1,2)],mod1.lambda,mod1.mu,icode);
 
             otherwise
                 error('Potential not implemented')

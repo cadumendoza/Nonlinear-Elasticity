@@ -12,7 +12,7 @@ switch example
         nx=10;ny=10;
         lambda=[0:0.03:1.]; codeLoad=0;  % 0 for applied force and 1 for applied displacement
         codeLoad=0;
-        mod1.force = -5e0;
+        mod1.force = 5e0;
     case 1 %upsetting of a block, imposed displacements
         x1=0;x2=1;
         y1=0;y2=1;
@@ -86,19 +86,19 @@ switch material
     case 1
       mod1.potential = 1; % 1 is Neohookean
       mod1.mu=1;
-      mod1.lambda=100;
+      mod1.lambda=100; % not too large
     case 2
       mod1.potential = 2; % 2 is transversely isotropic model
       mod1.mu=1.;
       mod1.c0=80;
       mod1.c1=5;
       mod1.kappa=100;
-      theta=pi/6;
+      theta=pi/4;%pi/4;
       mod1.N_fib=[cos(theta); sin(theta)];
     case 3
-      mod1.potential = 1; % 1 is Neohookean
+      mod1.potential = 3; % 3 is KsV
       mod1.mu=1;
-      mod1.lambda=100;
+      mod1.lambda=100; % not too large
     otherwise
         error('Material not implemented')
 end
@@ -112,13 +112,17 @@ CC0=1:(nx+1):((ny)*(nx+1)+1);
 CC1=(nx+1):(nx+1):((ny+1)*(nx+1));
 dofCC0=[2*CC0'-1
     2*CC0'];
-if codeLoad==0
+if codeLoad==0          % dead load, confined
     load1.dofCC=[dofCC0; 2*CC1'];
     dofCC1=[2*CC1'-1];
-elseif codeLoad==1
+elseif codeLoad==1      % imposed displacement, confined
     dofCC1=[2*CC1'-1
         2*CC1'];
     load1.dofCC=[dofCC0;dofCC1];
+elseif codeLoad==2      % dead load, linear springs
+    
+elseif codeLoad==3      % dead load, linear springs
+    
 else
     error('Loading not impemented')
 end

@@ -34,8 +34,43 @@ switch options.method
       end
     end
   case 1,   % Newton-Raphson with line search
-      % Code for you to write
-  otherwise,
+    iter=0;
+    err_x=100;
+    err_f=100;
+    [Ener,grad_E,Hess_E] = Ener_short(x_short,3);
+    while (iter<=options.n_iter_max) & ...
+        ( (err_x>options.tol_x) | ...
+        (err_f>options.tol_f))
+      iter=iter+1;
+      dx = -Hess_E\grad_E;
+      if options.linesearch==1
+          direction=dx'*grad_E;
+          if (direction)>0 
+              disp('reverse direction')
+              dx=-dx;
+              direction=-direction;
+          end
+          [x_short, t]=LineSearch(x_short,dx,Ener,direction,options);
+      else
+          t=1;
+          x_short=x_short+dx;
+      end
+      [Ener,grad_E,Hess_E] = Ener_short(x_short,3);
+      err_x=abs(t)*norm(dx)/norm(x_short);
+      err_f=norm(grad_E);
+      err_plot=[err_plot err_x];
+      err_plot1=[err_plot1 err_f];
+      %fprintf('Iteration %i, errors %e %e \n', iter,err_x,err_f)
+    end
+    %Check positive definiteness
+    if options.info==3
+      [V,D] = eig(Hess_E);
+      D=diag(D);
+      if ((min(D))<=-1e-6*abs(max(D)))
+           fprintf('Warning, the Hessian has a negative eigenvalue \n')
+      end
+    end
+    otherwise,
     error('This option does not exist');
 end
 
