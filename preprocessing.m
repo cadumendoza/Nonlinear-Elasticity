@@ -25,7 +25,7 @@ switch example
         x1=0;x2=40;
         y1=0;y2=1;
         nx=40;ny=3;
-        lambda=[1:-.01:0.8];
+        lambda=[1:-.005:0.5];
         codeLoad=1;
         mod1.force = 0;
     case 3 %compression of a slender beam, dead load
@@ -34,7 +34,7 @@ switch example
         nx=40;ny=3;
         lambda=-[0:0.002:.024];
         codeLoad=0;
-        mod1.force = 1;
+        mod1.force = 100;
     case 4 % arch, dead load at center of the arch
         x1=0;x2=40;
         y1=0;y2=1;

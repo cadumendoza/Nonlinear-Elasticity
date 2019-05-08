@@ -8,8 +8,8 @@ global mod1 mesh1 load1 el1 undeformed1
 % 3: compression of a slender beam, dead load
 % 4: arch, dead load at center of the arch
 % 5: arch, dead load near the supports
-example=0;
-material=2;
+example=2;
+material=1;
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material);
 
 %Equilibrate
@@ -51,7 +51,7 @@ for iload=1:length(lambda)
             load1.fixedvalues = x(load1.dofCC);
     end
 
-    %x=x+rand(size(x))*.001; %random perturbations
+    x=x+rand(size(x))*.005; %random perturbations
 
     %Solve the equilibrium nonlinear system of equations
     [x_eq,iflag,iter,E_eq] = Equilibrate(x,options);
