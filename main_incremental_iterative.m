@@ -15,7 +15,7 @@ K=0.5;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
 %Equilibrate
-options.n_iter_max=200;
+options.n_iter_max=80;
 options.tol_x=1.e-6;
 options.tol_f=1.e-6;
 options.info=3;
