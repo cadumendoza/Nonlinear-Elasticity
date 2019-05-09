@@ -110,12 +110,13 @@ x_eq=mesh1.x0;
 %Fixed dofs
 CC0=1:(nx+1):((ny)*(nx+1)+1);
 CC1=(nx+1):(nx+1):((ny+1)*(nx+1));
-if spring == 1
-    dofCC0=[2*CC0'];
-    load.dofSp=
-else
-    dofCC0=[2*CC0'-1
+CCsp1=1:1:(nx+1);
+CCsp2=
+dofCC0=[2*CC0'-1
     2*CC0'];
+if spring == 1
+    dofCC2=[2*CC0'];
+    load1.dofSp=2*CC0'-1;
 end
 if codeLoad==0          % dead load, confined
     load1.dofCC=[dofCC0; 2*CC1'];

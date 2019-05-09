@@ -5,7 +5,9 @@ global mod1 mesh1 load1 el1
 
 if spring == 1
     x_sp=x_long;
-    force_sp=-K*abs((x_sp(load1.dofSp+2)-x_sp(load1.dofSp))).*x_sp(load1.dofSp)
+    adj=82*ones(41,1);
+    ADJ=[adj ; -adj];
+    force_sp=-K*abs((x_sp(load1.dofSp+ADJ)-x_sp(load1.dofSp))).*(x_sp(load1.dofSp)-load1.fixedSp);
     load1.force(load1.dofSp)=force_sp;
 end
 [Ener,grad_E_l,Hess_E_l] = Energy(x_long,icode);
