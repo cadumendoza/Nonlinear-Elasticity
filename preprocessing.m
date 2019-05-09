@@ -1,4 +1,4 @@
-function [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material)
+function [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring)
 global mod1 mesh1 load1 el1 undeformed1
 
 
@@ -25,7 +25,7 @@ switch example
         x1=0;x2=40;
         y1=0;y2=1;
         nx=40;ny=3;
-        lambda=[1:-.01:0.8];
+        lambda=[1:-.01:0.5];
         codeLoad=1;
         mod1.force = 0;
     case 3 %compression of a slender beam, dead load
@@ -108,10 +108,16 @@ x_eq=mesh1.x0;
 
 %Loading
 %Fixed dofs
-CC0=1:(nx+1):((ny)*(nx+1)+1);
+CC0=1:(nx+1):((ny)*(nx+1)+1); % nodes
 CC1=(nx+1):(nx+1):((ny+1)*(nx+1));
-dofCC0=[2*CC0'-1
+if spring == 0
+    dofCC0=[2*CC0'-1
     2*CC0'];
+else
+    dofCC0=[2*CC0'-1
+    2*CC0'];
+    load1.dofCCsp=[2*CC0'-1];
+end
 if codeLoad==0          % dead load, confined
     load1.dofCC=[dofCC0; 2*CC1'];
     dofCC1=[2*CC1'-1];
@@ -119,10 +125,6 @@ elseif codeLoad==1      % imposed displacement, confined
     dofCC1=[2*CC1'-1
         2*CC1'];
     load1.dofCC=[dofCC0;dofCC1];
-elseif codeLoad==2      % dead load, linear springs
-    
-elseif codeLoad==3      % dead load, linear springs
-    
 else
     error('Loading not impemented')
 end

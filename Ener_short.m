@@ -3,7 +3,9 @@ global mod1 mesh1 load1 el1
 
 [x_long] = long(x_short);
 [Ener,grad_E_l,Hess_E_l] = Energy(x_long,icode);
+%Ener=4*
 if icode>1
+%grad_E(load1.dofCCsp)=Kx
 [grad_E] = short(grad_E_l);
 end
 if icode == 3

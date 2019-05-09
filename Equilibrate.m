@@ -5,6 +5,8 @@ global mod1 mesh1 load1 el1 undeformed1
 err_plot=[];
 err_plot1=[];
 [x_short] = short(x);
+%x_spring = x(load1.dofCCsp);
+K=1;
 
 switch options.method
   case 0,   %vanilla Newton-Raphson
@@ -16,8 +18,13 @@ switch options.method
         ( (err_x>options.tol_x) | ...
         (err_f>options.tol_f))
       iter=iter+1;
+      %Ener=Ener+K/2*x_spring'*x_spring;
+      %grad_Es=K*x_spring;
+      %Hess_Es=[K 0;0 0];
       dx = -Hess_E\grad_E;
+      %dx_sp=-Hess_Es\grad_Es;
       x_short=x_short+dx;
+      %x_spring=x_spring+dx_sp;
       [Ener,grad_E,Hess_E] = Ener_short(x_short,3);
       err_x=norm(dx)/norm(x_short);
       err_f=norm(grad_E);
