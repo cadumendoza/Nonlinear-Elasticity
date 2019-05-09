@@ -128,6 +128,7 @@ for ielem = 1:nelem
    grad_E(Te) = grad_E(Te) + grad_Ee';
    Hess_E(Te,Te) = Hess_E(Te,Te) + Hess_Ee;
 end
+
 Ener = Ener - load1.force'*x;
 grad_E = grad_E - load1.force;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    

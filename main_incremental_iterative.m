@@ -8,12 +8,14 @@ global mod1 mesh1 load1 el1 undeformed1
 % 3: compression of a slender beam, dead load
 % 4: arch, dead load at center of the arch
 % 5: arch, dead load near the supports
-example=0;
-material=2;
-[dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material);
+example=2;
+material=3;
+spring=1;   % 1 - with spring, 0 - without
+K=0.5;        % Spring constant
+[dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
 %Equilibrate
-options.n_iter_max=80;
+options.n_iter_max=200;
 options.tol_x=1.e-6;
 options.tol_f=1.e-6;
 options.info=3;
@@ -44,17 +46,21 @@ history_F=[];
 for iload=1:length(lambda)
     %Define the boundary conditions
     x=x_eq;
+    %if spring == 1
+    %    force_sp=-K*abs((x(2*CC0'+1)-x(2*CC0'-1))).*x(2*CC0'-1)
+    %    force(2*CC0'-1)=force_sp;
+    %end
     load1.force = force*lambda(iload);
     switch example
         case {1, 2}
             x(1:2:end)=x_eq(1:2:end)*lambda(iload)/lambda(max(iload-1,1));
             load1.fixedvalues = x(load1.dofCC);
     end
-
-    %x=x+rand(size(x))*.001; %random perturbations
+    
+    x=x+rand(size(x))*.001; %random perturbations
 
     %Solve the equilibrium nonlinear system of equations
-    [x_eq,iflag,iter,E_eq] = Equilibrate(x,options);
+    [x_eq,iflag,iter,E_eq] = Equilibrate(x,options,spring,K);
     [E_eq,grad_eq] = Energy(x_eq,3);
     history_E(iload)=E_eq;
     history_x(iload,:)=x_eq;
