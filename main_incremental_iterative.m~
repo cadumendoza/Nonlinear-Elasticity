@@ -11,7 +11,7 @@ global mod1 mesh1 load1 el1 undeformed1
 example=2;
 material=3;
 spring=1;   % 1 - with spring, 0 - without
-K=0.9;        % Spring constant
+K=0.1;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
 %Equilibrate
@@ -46,13 +46,13 @@ history_F=[];
 for iload=1:length(lambda)
     %Define the boundary conditions
     x=x_eq;
-    if spring == 1
-        x_sp=x;
-        adj=82*ones(41,1);
-        ADJ=[adj ; -adj];
-        force_sp=-K*abs((x_sp(load1.dofSp+ADJ)-x_sp(load1.dofSp))).*(x_sp(load1.dofSp)-load1.fixedSp);
-        load1.force(load1.dofSp)=force_sp;
-    end
+if spring == 1
+    x_sp=x_long;
+    adj=82*ones(41,1);
+    ADJ=[adj ; -adj];
+    force_sp=-K*abs((x_sp(load1.dofSp+ADJ)-x_sp(load1.dofSp))).*(x_sp(load1.dofSp)-load1.fixedSp);
+    load1.force(load1.dofSp)=force_sp;
+end
     load1.force = force*lambda(iload);
     switch example
         case {1, 2}
