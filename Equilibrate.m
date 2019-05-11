@@ -93,7 +93,10 @@ end
 if options.info>=2
   figure(5)
   hold off
-  semilogy([1:iter],err_plot,'ro-',[1:iter],err_plot1,'bo-');
+  semilogy([1:iter],err_plot,'ro-',[1:iter],err_plot1,'bo-'); % rojo desplazamiento, azul fuerza
+  xlabel('no. iterations')
+  ylabel('log(Error)')
+  legend('Displacement','Force')
   %pause
 end
 

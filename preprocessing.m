@@ -12,12 +12,12 @@ switch example
         nx=10;ny=10;
         lambda=[0:0.03:1.]; codeLoad=0;  % 0 for applied force and 1 for applied displacement
         codeLoad=0;
-        mod1.force = 5e0;
+        mod1.force = 6e0;
     case 1 %upsetting of a block, imposed displacements
         x1=0;x2=1;
         y1=0;y2=1;
         nx=10;ny=10;
-        lambda=[1:.025:2];
+        lambda=[1:-.025:0.5];
         %lambda=[1:-.01:0.5];
         codeLoad=1;
         mod1.force = 0;
@@ -25,7 +25,7 @@ switch example
         x1=0;x2=40;
         y1=0;y2=1;
         nx=40;ny=3;
-        lambda=[1:-.01:0.8];
+        lambda=[1:-.01:0.7];
         codeLoad=1;
         mod1.force = 0;
     case 3 %compression of a slender beam, dead load
@@ -93,7 +93,7 @@ switch material
       mod1.c0=80;
       mod1.c1=5;
       mod1.kappa=100;
-      theta=pi/4;%pi/4;
+      theta=0;%pi/4;
       mod1.N_fib=[cos(theta); sin(theta)];
     case 3
       mod1.potential = 3; % 3 is KsV

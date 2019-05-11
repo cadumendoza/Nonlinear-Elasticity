@@ -9,8 +9,8 @@ global mod1 mesh1 load1 el1 undeformed1
 % 4: arch, dead load at center of the arch
 % 5: arch, dead load near the supports
 example=2;
-material=3;
-spring=1;   % 1 - with spring, 0 - without
+material=1;
+spring=0;   % 1 - with spring, 0 - without
 K=0.1;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
