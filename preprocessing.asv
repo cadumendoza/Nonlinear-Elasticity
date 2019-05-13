@@ -113,17 +113,13 @@ CC1=(nx+1):(nx+1):((ny+1)*(nx+1));
 CCsp1=1:1:(nx+1);
 CCsp2=((ny+1)*(nx+1)-nx):1:((ny+1)*(nx+1));
 
-
-dofCC0=[2*CC0'-1
-    2*CC0'];
+dofCC0=[(length(CCsp1)-1)/2]
+% dofCC0=[2*CC0'-1
+%     2*CC0'];
 
 if spring == 1
-    CC0=[0];
-    dofCC0=[(length(CCsp1)-1)/2]
     dofCCsp=[2*CCsp2'];
     load1.dofSp=dofCCsp;
-    dofCCspx=[2*CCsp2'-1];
-    load1.dofSpx=dofCCspx;
     load1.fixedSp=x_eq(load1.dofSp);
 end
 if codeLoad==0          % dead load, confined

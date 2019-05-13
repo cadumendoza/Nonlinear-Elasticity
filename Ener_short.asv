@@ -40,9 +40,8 @@ if spring == 1
 end
 
 [Ener,grad_E_l,Hess_E_l] = Energy(x_long,icode);
-for i=1:length(load1.k_sp)
-    %Hess_E_l(i,i)=Hess_E_l(i,i)+load1.k_sp(i);
-end
+
+for
 
 if icode>1
 [grad_E] = short(grad_E_l);
@@ -51,6 +50,4 @@ if icode == 3
 Hess_E = Hess_E_l;
 Hess_E(load1.dofCC,:) = [];
 Hess_E(:,load1.dofCC) = [];
-load1.k_sp(load1.dofCC)=[];
 end
-

@@ -8,10 +8,11 @@ global mod1 mesh1 load1 el1 undeformed1
 % 3: compression of a slender beam, dead load
 % 4: arch, dead load at center of the arch
 % 5: arch, dead load near the supports
+
 example=2;
 material=1;
-spring=0;   % 1 - with spring, 0 - without
-K=0.1;        % Spring constant
+spring=1;   % 1 - with spring, 0 - without
+K=1;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
 %Equilibrate
@@ -38,7 +39,8 @@ options.beta = .8; % For backtracking
 precompute;
 
 history_E=[];
-history_x=[];
+mesh1.history_x=[];
+mesh1.history_x(1,:)=mesh1.x0;
 history_delta=[];
 history_F=[];
 
@@ -60,14 +62,14 @@ for iload=1:length(lambda)
     x=x+rand(size(x))*.001; %random perturbations
 
     %Solve the equilibrium nonlinear system of equations
-    [x_eq,iflag,iter,E_eq] = Equilibrate(x,options,spring,K);
+    [x_eq,iflag,iter,E_eq] = Equilibrate(x,options,spring,K,iload);
     [E_eq,grad_eq] = Energy(x_eq,3);
     history_E(iload)=E_eq;
-    history_x(iload,:)=x_eq;
+    mesh1.history_x(iload+1,:)=x_eq;
     switch example
         case {0, 1, 2, 3}
             history_delta(iload)=x_eq(2*CC1(1)-1)-mesh1.x0(2*CC1(1)-1);
-            history_F(iload)=sum(grad_eq(2*CC0'-1)); %Reaction
+            %history_F(iload)=sum(grad_eq(2*CC0'-1)); %Reaction
         case {4, 5}
             history_delta(iload)=mean(x_eq(dof_disp)-mesh1.x0(dof_disp));
             history_F(iload)=mean(load1.force(dof_force)); %Reaction
