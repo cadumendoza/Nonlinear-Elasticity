@@ -24,7 +24,7 @@ precompute;
 x=x_eq;
 x(1:2:end) = x(1:2:end) + .5*exp(-2*(x(2:2:end)-.5).^2);
 x(2:2:end) = x(2:2:end) + .1*sin(4*x(1:2:end));
-DibujaMalla(mesh1.T,mesh1.x0,x,'r',1)
+%DibujaMalla(mesh1.T,mesh1.x0,x,'r',1)
 if spring == 1
     x_sp=x;
     force_sp=zeros(41,1);
@@ -61,7 +61,7 @@ for idof=1:length(x)
     load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
     
     end
-   [Ener_,grad_E_] = Energy(x_,3); %compute the perturbed energy and forces
+   [Ener_,grad_E_,Hess_E_] = Energy(x_,3); %compute the perturbed energy and forces
    % 1. Check the gradient
    num_grad=(Ener_-Ener)/h;
    if abs((num_grad-grad_E(idof))/grad_E(idof))>1e-3
@@ -75,8 +75,9 @@ for idof=1:length(x)
        disp(abs((num_grad-grad_E(idof))/grad_E(idof)))
    end
   % 2. Check the Hessian
+  zumba=Hess_E_(idof,:);
   num_Hess=(grad_E_-grad_E)/h;
-  num_Hess=num_Hess';
+  num_Hess=zumba';
   if norm(num_Hess-Hess_E(idof,:))/norm(Hess_E(idof,:))>1e-3
       [val index] = max(abs(num_Hess-Hess_E(idof,:)));
       disp('Warning Hessian!!')

@@ -3,6 +3,8 @@ global mod1 mesh1 load1 el1
 
 [x_long] = long(x_short);
 
+load1.Ensp=0;
+load1.Ks=zeros(41,1);
 if spring == 1
     x_sp=x_long;
     force_sp=zeros(41,1);

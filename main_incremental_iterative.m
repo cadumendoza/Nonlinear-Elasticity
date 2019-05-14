@@ -55,6 +55,9 @@ for iload=1:length(lambda)
     end
     
     %x=x+rand(size(x))*.001; %random perturbations
+    
+    %Solve the equilibrium nonlinear system of equations
+    [x_eq,iflag,iter,E_eq] = Equilibrate(x,options,spring,K);
     if spring == 1
         x_sp=x;
         force_sp=zeros(41,1);
@@ -68,8 +71,6 @@ for iload=1:length(lambda)
         load1.force(load1.dofSp)=force_sp;
         load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
     end
-    %Solve the equilibrium nonlinear system of equations
-    [x_eq,iflag,iter,E_eq] = Equilibrate(x,options,spring,K);
     [E_eq,grad_eq] = Energy(x_eq,3);
     history_E(iload)=E_eq;
     history_x(iload,:)=x_eq;
