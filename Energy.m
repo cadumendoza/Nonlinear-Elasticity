@@ -1,4 +1,4 @@
-function [Ener,grad_E,Hess_E] = Energy(x,icode,Ensp)
+function [Ener,grad_E,Hess_E] = Energy(x,icode)
 global mod1 mesh1 load1 el1 undeformed1
 
 % We: deformation energy
@@ -135,7 +135,7 @@ for ielem = 1:nelem
    Hess_E(Te,Te) = Hess_E(Te,Te) + Hess_Ee;
 end
 
-Ener = Ener - load1.force'*x - Ensp;
+Ener = Ener - load1.force'*x - load1.Ensp;
 grad_E = grad_E - load1.force;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 end

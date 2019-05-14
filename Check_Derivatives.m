@@ -7,9 +7,11 @@ clear all
 global mod1 mesh1 load1 el1 undeformed1
 
 
-example=0;
-material=3;
-[dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material);
+example=2;
+material=1;
+spring=1;   % 1 - with spring, 0 - without
+K=0.01;        % Spring constant
+[dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 load1.force = force*lambda(1); % include external forces
 
 %Setup the undeformed configuration
@@ -23,7 +25,19 @@ x=x_eq;
 x(1:2:end) = x(1:2:end) + .5*exp(-2*(x(2:2:end)-.5).^2);
 x(2:2:end) = x(2:2:end) + .1*sin(4*x(1:2:end));
 DibujaMalla(mesh1.T,mesh1.x0,x,'r',1)
-
+if spring == 1
+    x_sp=x;
+    force_sp=zeros(41,1);
+    %adj=82*ones(41,1);
+    %ADJ=[adj ; -adj];
+    load1.dofSpm=load1.dofSp(2:end-1);
+    force_sp(2:end-1)=-K*0.5*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3))).*(x_sp(load1.dofSpm)-load1.fixedSp(2:end-1));
+    force_sp(1)=-K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1))).*(x_sp(load1.dofSp(1))-load1.fixedSp(1));
+    force_sp(end)=-K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3))).*(x_sp(load1.dofSp(end))-load1.fixedSp(end));
+    load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp);
+    load1.force(load1.dofSp)=force_sp;
+    load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
+end
 %compute the energy, its analytical gradient and its analytical Hessian
 [Ener,grad_E,Hess_E] = Energy(x,3);
 
@@ -33,7 +47,21 @@ h=1e-8; %for numerical differentiation
 for idof=1:length(x)
    x_=x;
    x_(idof) = x_(idof)+h; % perturb one degree of freedom
-   [Ener_,grad_E_] = Energy(x_,2); %compute the perturbed energy and forces
+   if spring == 1
+    x_sp=x_;
+    force_sp=zeros(41,1);
+    %adj=82*ones(41,1);
+    %ADJ=[adj ; -adj];
+    load1.dofSpm=load1.dofSp(2:end-1);
+    force_sp(2:end-1)=-K*0.5*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3))).*(x_sp(load1.dofSpm)-load1.fixedSp(2:end-1));
+    force_sp(1)=-K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1))).*(x_sp(load1.dofSp(1))-load1.fixedSp(1));
+    force_sp(end)=-K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3))).*(x_sp(load1.dofSp(end))-load1.fixedSp(end));
+    load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp);
+    load1.force(load1.dofSp)=force_sp;
+    load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
+    
+    end
+   [Ener_,grad_E_] = Energy(x_,3); %compute the perturbed energy and forces
    % 1. Check the gradient
    num_grad=(Ener_-Ener)/h;
    if abs((num_grad-grad_E(idof))/grad_E(idof))>1e-3
