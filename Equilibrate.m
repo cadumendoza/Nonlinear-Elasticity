@@ -1,4 +1,4 @@
-function [x_equil,iflag,iter,Ener] = Equilibrate(x,options,spring,K)
+function [x_equil,iflag,iter,Ener,Ensp] = Equilibrate(x,options,spring,K)
 global mod1 mesh1 load1 el1 undeformed1
 
 
@@ -11,14 +11,14 @@ switch options.method
     iter=0;
     err_x=100;
     err_f=100;
-    [Ener,grad_E,Hess_E] = Ener_short(x_short,3,spring,K);
+    [Ener,grad_E,Hess_E,Ensp] = Ener_short(x_short,3,spring,K);
     while (iter<=options.n_iter_max) & ...
         ( (err_x>options.tol_x) | ...
         (err_f>options.tol_f))
       iter=iter+1;
       dx = -Hess_E\grad_E;
       x_short=x_short+dx;
-      [Ener,grad_E,Hess_E] = Ener_short(x_short,3,spring,K);
+      [Ener,grad_E,Hess_E,Ensp] = Ener_short(x_short,3,spring,K);
       err_x=norm(dx)/norm(x_short);
       err_f=norm(grad_E);
       err_plot=[err_plot err_x];
@@ -37,7 +37,7 @@ switch options.method
     iter=0;
     err_x=100;
     err_f=100;
-    [Ener,grad_E,Hess_E] = Ener_short(x_short,3,spring,K);
+    [Ener,grad_E,Hess_E,Ensp] = Ener_short(x_short,3,spring,K);
     while (iter<=options.n_iter_max) & ...
         ( (err_x>options.tol_x) | ...
         (err_f>options.tol_f))
@@ -57,7 +57,7 @@ switch options.method
           x_short=x_short+dx;
       end
       
-      [Ener,grad_E,Hess_E] = Ener_short(x_short,3,spring,K);
+      [Ener,grad_E,Hess_E,Ensp] = Ener_short(x_short,3,spring,K);
       err_x=abs(t)*norm(dx)/norm(x_short);
       err_f=norm(grad_E);
       err_plot=[err_plot err_x];

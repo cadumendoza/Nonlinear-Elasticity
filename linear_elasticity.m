@@ -1,4 +1,4 @@
-function [u,Reaction,delta] = linear_elasticity(codeLoad,fact,example,CC1,dof_force,dof_disp)
+function [u,Reaction,delta] = linear_elasticity(codeLoad,fact,example,CC1,dof_force,dof_disp,Ensp)
 global mod1 mesh1 load1 el1 undeformed1
 
 
@@ -13,7 +13,7 @@ x_BC = x(load1.dofCC);
 x0_BC=x_eq(load1.dofCC);
 u_BC=x_BC-x0_BC;
 
-[E_eq,grad_eq, K0] = Energy(x_eq,3);
+[E_eq,grad_eq, K0] = Energy(x_eq,3,Ensp);
 L=zeros(size(K0,1),load1.ndofCC);
 Zero_M=zeros(load1.ndofCC,load1.ndofCC);
 for i=1:load1.ndofCC

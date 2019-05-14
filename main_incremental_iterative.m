@@ -10,8 +10,8 @@ global mod1 mesh1 load1 el1 undeformed1
 % 5: arch, dead load near the supports
 example=2;
 material=1;
-spring=0;   % 1 - with spring, 0 - without
-K=0.1;        % Spring constant
+spring=1;   % 1 - with spring, 0 - without
+K=0.01;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
 %Equilibrate
@@ -57,11 +57,11 @@ for iload=1:length(lambda)
             load1.fixedvalues = x(load1.dofCC);
     end
     
-    x=x+rand(size(x))*.001; %random perturbations
+    %x=x+rand(size(x))*.001; %random perturbations
 
     %Solve the equilibrium nonlinear system of equations
-    [x_eq,iflag,iter,E_eq] = Equilibrate(x,options,spring,K);
-    [E_eq,grad_eq] = Energy(x_eq,3);
+    [x_eq,iflag,iter,E_eq,Ensp] = Equilibrate(x,options,spring,K);
+    [E_eq,grad_eq] = Energy(x_eq,3,Ensp);
     history_E(iload)=E_eq;
     history_x(iload,:)=x_eq;
     switch example
@@ -89,7 +89,7 @@ xlabel('\delta')
 ylabel('Force')
 
 %Solve the same problem using the linear theory of elasticity
-[u,Reaction,delta] = linear_elasticity(codeLoad,lambda(end),example,CC1,dof_force,dof_disp);
+[u,Reaction,delta] = linear_elasticity(codeLoad,lambda(end),example,CC1,dof_force,dof_disp,Ensp);
 hold on
 plot([0 -(delta)],[0,abs(Reaction)],'k-')
 legend('Nonlinear elasticity','Linear elasticity')
