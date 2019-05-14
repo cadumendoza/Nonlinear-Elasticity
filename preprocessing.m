@@ -25,7 +25,7 @@ switch example
         x1=0;x2=40;
         y1=0;y2=1;
         nx=40;ny=3;
-        lambda=[1:-.01:0.7];
+        lambda=[1:-.01:0.85];
         codeLoad=1;
         mod1.force = 0;
     case 3 %compression of a slender beam, dead load

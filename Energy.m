@@ -120,7 +120,7 @@ for ielem = 1:nelem
         grad_Ee=grad_Ee + S*B0 * undeformed1.dvol0(ig);            
         S_=[S(1) S(3); S(3) S(2)];
         H=DNDX'*S_*DNDX;
-        if nelem < 41
+        if ielem < 41
             H=H-[0 0 0 0;
                  0 load1.Ks(ielem) 0 load1.Ks(ielem);
                  0 0 0 0;
