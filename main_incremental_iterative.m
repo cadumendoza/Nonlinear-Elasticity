@@ -11,7 +11,7 @@ global mod1 mesh1 load1 el1 undeformed1
 example=2;
 material=1;
 spring=1;   % 1 - with spring, 0 - without
-K=0.01;        % Spring constant
+K=1;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
 %Equilibrate
@@ -54,10 +54,13 @@ for iload=1:length(lambda)
             load1.fixedvalues = x(load1.dofCC);
     end
     
-    %x=x+rand(size(x))*.001; %random perturbations
+    x=x+rand(size(x))*.001; %random perturbations
+    load1.Ensp=0;
+    load1.Ks=zeros(41,1);
     
     %Solve the equilibrium nonlinear system of equations
     [x_eq,iflag,iter,E_eq] = Equilibrate(x,options,spring,K);
+    
     if spring == 1
         x_sp=x;
         force_sp=zeros(41,1);

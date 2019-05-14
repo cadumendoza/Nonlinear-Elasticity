@@ -77,7 +77,7 @@ for idof=1:length(x)
   % 2. Check the Hessian
   zumba=Hess_E_(idof,:);
   num_Hess=(grad_E_-grad_E)/h;
-  num_Hess=zumba';
+  num_Hess=zumba;
   if norm(num_Hess-Hess_E(idof,:))/norm(Hess_E(idof,:))>1e-3
       [val index] = max(abs(num_Hess-Hess_E(idof,:)));
       disp('Warning Hessian!!')
