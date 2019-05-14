@@ -11,7 +11,7 @@ global mod1 mesh1 load1 el1 undeformed1
 example=2;
 material=1;
 spring=1;   % 1 - with spring, 0 - without
-K=1;        % Spring constant
+K=3;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
 %Equilibrate
@@ -58,22 +58,21 @@ for iload=1:length(lambda)
     load1.Ensp=0;
     load1.Ks=zeros(41,1);
     
-    %Solve the equilibrium nonlinear system of equations
-    [x_eq,iflag,iter,E_eq] = Equilibrate(x,options,spring,K);
-    
     if spring == 1
         x_sp=x;
         force_sp=zeros(41,1);
-        %adj=82*ones(41,1);
-        %ADJ=[adj ; -adj];
-        load1.dofSpm=load1.dofSp(2:end-1);
+        load1.dofSpm=load1.dofSp(2:end-1); %degrees of freedom of each y node to assign spring
         force_sp(2:end-1)=-K*0.5*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3))).*(x_sp(load1.dofSpm)-load1.fixedSp(2:end-1));
         force_sp(1)=-K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1))).*(x_sp(load1.dofSp(1))-load1.fixedSp(1));
         force_sp(end)=-K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3))).*(x_sp(load1.dofSp(end))-load1.fixedSp(end));
         load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp);
-        load1.force(load1.dofSp)=force_sp;
+        %load1.force(load1.dofSp)=force_sp;
         load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
     end
+    
+    %Solve the equilibrium nonlinear system of equations
+    [x_eq,iflag,iter,E_eq] = Equilibrate(x,options,spring,K);
+    
     [E_eq,grad_eq] = Energy(x_eq,3);
     history_E(iload)=E_eq;
     history_x(iload,:)=x_eq;
@@ -104,8 +103,8 @@ ylabel('Force')
 %Solve the same problem using the linear theory of elasticity
 [u,Reaction,delta] = linear_elasticity(codeLoad,lambda(end),example,CC1,dof_force,dof_disp);
 hold on
-plot([0 -(delta)],[0,abs(Reaction)],'k-')
+%plot([0 -(delta)],[0,abs(Reaction)],'k-')
 legend('Nonlinear elasticity','Linear elasticity')
 figure(1)
 hold on
-DibujaMalla(mesh1.T,mesh1.x0,mesh1.x0+u,'k',1)
+DibujaMalla(mesh1.T,mesh1.x0,mesh1.x0,'k',1)
