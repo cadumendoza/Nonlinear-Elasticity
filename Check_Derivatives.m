@@ -10,7 +10,7 @@ global mod1 mesh1 load1 el1 undeformed1
 example=2;
 material=1;
 spring=1;   % 1 - with spring, 0 - without
-K=0.01;        % Spring constant
+K=0.5;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 load1.force = force*lambda(1); % include external forces
 
@@ -28,6 +28,7 @@ x(2:2:end) = x(2:2:end) + .1*sin(4*x(1:2:end));
 if spring == 1
     x_sp=x;
     force_sp=zeros(41,1);
+    load1.fsp=zeros(328,1);
     %adj=82*ones(41,1);
     %ADJ=[adj ; -adj];
     load1.dofSpm=load1.dofSp(2:end-1);
@@ -35,7 +36,7 @@ if spring == 1
     force_sp(1)=-K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1))).*(x_sp(load1.dofSp(1))-load1.fixedSp(1));
     force_sp(end)=-K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3))).*(x_sp(load1.dofSp(end))-load1.fixedSp(end));
     load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp);
-    load1.force(load1.dofSp)=force_sp;
+    load1.fsp(load1.dofSp)=force_sp;
     load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
 end
 %compute the energy, its analytical gradient and its analytical Hessian
@@ -50,6 +51,7 @@ for idof=1:length(x)
    if spring == 1
     x_sp=x_;
     force_sp=zeros(41,1);
+    %load1.fsp=zeros(328,1);
     %adj=82*ones(41,1);
     %ADJ=[adj ; -adj];
     load1.dofSpm=load1.dofSp(2:end-1);
@@ -57,7 +59,7 @@ for idof=1:length(x)
     force_sp(1)=-K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1))).*(x_sp(load1.dofSp(1))-load1.fixedSp(1));
     force_sp(end)=-K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3))).*(x_sp(load1.dofSp(end))-load1.fixedSp(end));
     load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp);
-    load1.force(load1.dofSp)=force_sp;
+    load1.fsp(load1.dofSp)=force_sp;
     load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
     
     end

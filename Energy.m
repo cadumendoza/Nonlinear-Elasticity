@@ -44,7 +44,7 @@ for ielem = 1:nelem
         Ener = Ener + W * undeformed1.dvol0(ig);
     end
 end
-Ener = Ener - load1.force'*x;
+Ener = Ener - load1.force'*x - load1.Ensp;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 elseif icode==2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      
@@ -82,8 +82,8 @@ for ielem = 1:nelem
     end
    grad_E(Te) = grad_E(Te) + grad_Ee';
 end 
-Ener = Ener - load1.force'*x;
-grad_E = grad_E - load1.force;
+Ener = Ener - load1.force'*x - load1.Ensp;
+grad_E = grad_E - load1.force - load1.fsp;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 elseif icode==3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
@@ -136,7 +136,7 @@ for ielem = 1:nelem
 end
 
 Ener = Ener - load1.force'*x - load1.Ensp;
-grad_E = grad_E - load1.force;
+grad_E = grad_E - load1.force - load1.fsp;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 end
 
