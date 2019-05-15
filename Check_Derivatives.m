@@ -10,7 +10,7 @@ global mod1 mesh1 load1 el1 undeformed1
 example=2;
 material=1;
 spring=1;   % 1 - with spring, 0 - without
-K=0.5;        % Spring constant
+K=100;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 load1.force = force*lambda(1); % include external forces
 
@@ -27,6 +27,11 @@ x(2:2:end) = x(2:2:end) + .1*sin(4*x(1:2:end));
 %DibujaMalla(mesh1.T,mesh1.x0,x,'r',1)
 if spring == 1
     x_sp=x;
+    for i=1:length(load1.dofSp)
+        if x_sp(load1.dofSp(i))>0
+            x_sp(load1.dofSp(i))=0;
+        end
+    end
     force_sp=zeros(41,1);
     load1.fsp=zeros(328,1);
     %adj=82*ones(41,1);
@@ -35,7 +40,7 @@ if spring == 1
     force_sp(2:end-1)=-K*0.5*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3))).*(x_sp(load1.dofSpm)-load1.fixedSp(2:end-1));
     force_sp(1)=-K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1))).*(x_sp(load1.dofSp(1))-load1.fixedSp(1));
     force_sp(end)=-K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3))).*(x_sp(load1.dofSp(end))-load1.fixedSp(end));
-    load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp);
+    load1.Ensp=abs(0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp));
     load1.fsp(load1.dofSp)=force_sp;
     load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
 end
@@ -50,7 +55,12 @@ for idof=1:length(x)
    x_(idof) = x_(idof)+h; % perturb one degree of freedom
    if spring == 1
     x_sp=x_;
-    force_sp=zeros(41,1);
+    for i=1:length(load1.dofSp)
+        if x_sp(load1.dofSp(i))>0
+            x_sp(load1.dofSp(i))=0;
+        end
+    end
+    %force_sp=zeros(41,1);
     %load1.fsp=zeros(328,1);
     %adj=82*ones(41,1);
     %ADJ=[adj ; -adj];
@@ -58,7 +68,7 @@ for idof=1:length(x)
     force_sp(2:end-1)=-K*0.5*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3))).*(x_sp(load1.dofSpm)-load1.fixedSp(2:end-1));
     force_sp(1)=-K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1))).*(x_sp(load1.dofSp(1))-load1.fixedSp(1));
     force_sp(end)=-K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3))).*(x_sp(load1.dofSp(end))-load1.fixedSp(end));
-    load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp);
+    load1.Ensp=abs(0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp));
     load1.fsp(load1.dofSp)=force_sp;
     load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
     
@@ -79,7 +89,7 @@ for idof=1:length(x)
   % 2. Check the Hessian
   zumba=Hess_E_(idof,:);
   num_Hess=(grad_E_-grad_E)/h;
-  num_Hess=zumba;
+  %num_Hess=zumba;
   if norm(num_Hess-Hess_E(idof,:))/norm(Hess_E(idof,:))>1e-3
       [val index] = max(abs(num_Hess-Hess_E(idof,:)));
       disp('Warning Hessian!!')
