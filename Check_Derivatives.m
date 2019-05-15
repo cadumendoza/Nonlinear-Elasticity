@@ -10,7 +10,7 @@ global mod1 mesh1 load1 el1 undeformed1
 example=2;
 material=1;
 spring=1;   % 1 - with spring, 0 - without
-K=1;        % Spring constant
+K=0.05;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 load1.force = force*lambda(1); % include external forces
 
@@ -57,14 +57,20 @@ for idof=1:length(x)
     force_sp(1)=-K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1))).*(x_sp(load1.dofSp(1))-load1.fixedSp(1));
     force_sp(end)=-K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3))).*(x_sp(load1.dofSp(end))-load1.fixedSp(end));
     load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp);
-    load1.force(load1.dofSp)=force_sp;
+    load1.forcesp(load1.dofSp)=force_sp;
     load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
     
     end
    [Ener_,grad_E_,Hess_E_] = Energy(x_,3); %compute the perturbed energy and forces
+   ihess=1;
+   for Ihess=2:2:length(load1.dofSp)
+          grad_E_(Ihess)=grad_E_(Ihess)-load1.forcesp(load1.dofSp(ihess));
+          Hess_E_(Ihess,Ihess)=Hess_E_(Ihess,Ihess)+load1.Ks(ihess);
+          ihess=ihess+1;
+   end
    % 1. Check the gradient
    num_grad=(Ener_-Ener)/h;
-   if abs((num_grad-grad_E(idof))/grad_E(idof))>1e-3
+   if abs((num_grad-grad_E(idof))/grad_E(idof))>1e-2
        disp('Warning gradient!!')
        disp(idof)
        disp('Analytical')
