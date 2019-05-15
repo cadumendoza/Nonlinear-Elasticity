@@ -44,7 +44,7 @@ switch options.method
       iter=iter+1;
       ihess=1;
       for Ihess=2:2:length(load1.dofSp)
-          %grad_E(Ihess)=grad_E(Ihess)-load1.forcesp(load1.dofSp(ihess));
+          grad_E(Ihess)=grad_E(Ihess)-load1.forcesp(load1.dofSp(ihess));
           Hess_E(Ihess,Ihess)=Hess_E(Ihess,Ihess)+load1.Ks(ihess);
           ihess=ihess+1;
       end
