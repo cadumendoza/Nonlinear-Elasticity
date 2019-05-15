@@ -10,7 +10,7 @@ global mod1 mesh1 load1 el1 undeformed1
 example=2;
 material=1;
 spring=1;   % 1 - with spring, 0 - without
-K=100;        % Spring constant
+K=1;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 load1.force = force*lambda(1); % include external forces
 
@@ -40,7 +40,7 @@ if spring == 1
     force_sp(2:end-1)=-K*0.5*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3))).*(x_sp(load1.dofSpm)-load1.fixedSp(2:end-1));
     force_sp(1)=-K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1))).*(x_sp(load1.dofSp(1))-load1.fixedSp(1));
     force_sp(end)=-K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3))).*(x_sp(load1.dofSp(end))-load1.fixedSp(end));
-    load1.Ensp=abs(0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp));
+    load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp);
     load1.fsp(load1.dofSp)=force_sp;
     load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
 end
@@ -68,10 +68,9 @@ for idof=1:length(x)
     force_sp(2:end-1)=-K*0.5*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3))).*(x_sp(load1.dofSpm)-load1.fixedSp(2:end-1));
     force_sp(1)=-K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1))).*(x_sp(load1.dofSp(1))-load1.fixedSp(1));
     force_sp(end)=-K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3))).*(x_sp(load1.dofSp(end))-load1.fixedSp(end));
-    load1.Ensp=abs(0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp));
+    load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp);
     load1.fsp(load1.dofSp)=force_sp;
     load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
-    
     end
    [Ener_,grad_E_,Hess_E_] = Energy(x_,3); %compute the perturbed energy and forces
    % 1. Check the gradient
@@ -88,7 +87,7 @@ for idof=1:length(x)
    end
   % 2. Check the Hessian
   zumba=Hess_E_(idof,:);
-  num_Hess=(grad_E_-grad_E)/h;
+  num_Hess=((grad_E_-grad_E)/h)';
   %num_Hess=zumba;
   if norm(num_Hess-Hess_E(idof,:))/norm(Hess_E(idof,:))>1e-3
       [val index] = max(abs(num_Hess-Hess_E(idof,:)));

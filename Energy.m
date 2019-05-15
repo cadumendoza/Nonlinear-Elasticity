@@ -83,7 +83,7 @@ for ielem = 1:nelem
    grad_E(Te) = grad_E(Te) + grad_Ee';
 end 
 Ener = Ener - load1.force'*x - load1.Ensp;
-grad_E = grad_E - load1.force - load1.fsp;
+grad_E = grad_E - load1.force + load1.fsp;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 elseif icode==3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
@@ -121,10 +121,16 @@ for ielem = 1:nelem
         S_=[S(1) S(3); S(3) S(2)];
         H=DNDX'*S_*DNDX;
         if ielem < 41
-            H=H-[0 0 0 0;
+            H=H+[0 0 0 0;
                  0 load1.Ks(ielem) 0 load1.Ks(ielem);
                  0 0 0 0;
                  0 0 0 0];
+        end
+        if ielem > 80
+            H=H+[0 0 0 0;
+                 0 0 0 0;
+                 0 0 0 0;
+                 0 load1.Ks2(ielem-80) 0 load1.Ks2(ielem-80)];
         end
         HH=zeros(8);
         HH(1:2:8,1:2:8)=H;
@@ -136,7 +142,7 @@ for ielem = 1:nelem
 end
 
 Ener = Ener - load1.force'*x - load1.Ensp;
-grad_E = grad_E - load1.force - load1.fsp;
+grad_E = grad_E - load1.force + load1.fsp;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 end
 

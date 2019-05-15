@@ -25,7 +25,7 @@ switch example
         x1=0;x2=40;
         y1=0;y2=1;
         nx=40;ny=3;
-        lambda=[1:-.01:0.7];
+        lambda=[1:-.01:0.85];
         codeLoad=1;
         mod1.force = 0;
     case 3 %compression of a slender beam, dead load
@@ -116,11 +116,8 @@ dofCC0=[2*CC0'-1
     2*CC0'];
 if spring == 1
     dofCCsp=[2*CCsp1'];
-    dofCCsp2=[2*CCsp2'];
     load1.dofSp=dofCCsp;
-    load1.dofSp2=dofCCsp2;
     load1.fixedSp=x_eq(load1.dofSp);
-    load1.fixedSp2=x_eq(load1.dofSp2);
 end
 if codeLoad==0          % dead load, confined
     load1.dofCC=[dofCC0; 2*CC1'];
