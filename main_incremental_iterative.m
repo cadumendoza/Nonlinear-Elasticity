@@ -11,11 +11,11 @@ global mod1 mesh1 load1 el1 undeformed1
 example=2;
 material=1;
 spring=1;   % 1 - with spring, 0 - without
-K=0.05;        % Spring constant
+K=0.01;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
 %Equilibrate
-options.n_iter_max=80;
+options.n_iter_max=200;
 options.tol_x=1.e-6;
 options.tol_f=1.e-6;
 options.info=3;

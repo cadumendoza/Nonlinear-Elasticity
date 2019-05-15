@@ -125,7 +125,7 @@ for ielem = 1:nelem
                  0 load1.Ks(ielem) 0 load1.Ks(ielem);
                  0 0 0 0;
                  0 0 0 0];
-            H=H+Hsp;
+            %H=H+Hsp;
         end
         HH=zeros(8);
         HH(1:2:8,1:2:8)=H;
