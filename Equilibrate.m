@@ -42,13 +42,15 @@ switch options.method
         ( (err_x>options.tol_x) | ...
         (err_f>options.tol_f))
       iter=iter+1;
-      ihess=1;
-      for Ihess=2:2:length(load1.dofSp)
-          Hess_E(Ihess,Ihess)=Hess_E(Ihess,Ihess)+load1.Ks(ihess);
-          ihess=ihess+1;
-      end
-      for Ihess=2:2:length(load1.dofSp)*2
-          grad_E(Ihess)=grad_E(Ihess)-load1.forcesp(Ihess);
+      if spring==1
+          ihess=1;
+          for Ihess=2:2:length(load1.dofSp)
+              Hess_E(Ihess,Ihess)=Hess_E(Ihess,Ihess)+load1.Ks(ihess);
+              ihess=ihess+1;
+          end
+          for Ihess=2:2:length(load1.dofSp)*2
+              grad_E(Ihess)=grad_E(Ihess)-load1.forcesp(Ihess);
+          end
       end
       dx = -Hess_E\grad_E;        
     

@@ -7,12 +7,13 @@ clear all
 global mod1 mesh1 load1 el1 undeformed1
 
 
-example=2;
-material=1;
-spring=1;   % 1 - with spring, 0 - without
+example=1;
+material=3;
+spring=0;   % 1 - with spring, 0 - without
 K=0.05;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 load1.force = force*lambda(1); % include external forces
+load1.Ensp=0; %Initialize Energy
 
 %Setup the undeformed configuration
 precompute;
@@ -63,10 +64,12 @@ for idof=1:length(x)
     end
    [Ener_,grad_E_,Hess_E_] = Energy(x_,3); %compute the perturbed energy and forces
    ihess=1;
-   for Ihess=2:2:length(load1.dofSp)
-          grad_E_(Ihess)=grad_E_(Ihess)-load1.forcesp(load1.dofSp(ihess));
-          Hess_E_(Ihess,Ihess)=Hess_E_(Ihess,Ihess)+load1.Ks(ihess);
-          ihess=ihess+1;
+   if spring==1
+        for Ihess=2:2:length(load1.dofSp)
+              grad_E_(Ihess)=grad_E_(Ihess)-load1.forcesp(load1.dofSp(ihess));
+              Hess_E_(Ihess,Ihess)=Hess_E_(Ihess,Ihess)+load1.Ks(ihess);
+              ihess=ihess+1;
+        end
    end
    % 1. Check the gradient
    num_grad=(Ener_-Ener)/h;
