@@ -27,8 +27,8 @@ if spring == 1
     load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp)+0.5*force_sp2'*(x_sp(load1.dofSp2)-load1.fixedSp2);
     load1.fsp(load1.dofSp)=-force_sp;
     load1.fsp(load1.dofSp2)=-force_sp2;
-    load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.25*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
-    load1.Ks2=[K*0.5*abs((x_sp(load1.dofSp2(1)+1)-x_sp(load1.dofSp2(1)-1)));K*0.25*abs((x_sp(load1.dofSpm2+1)-x_sp(load1.dofSpm2-3)));K*0.5*abs((x_sp(load1.dofSp2(end)-1)-x_sp(load1.dofSp2(end)-3)))];
+    load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.5*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
+    load1.Ks2=[K*0.5*abs((x_sp(load1.dofSp2(1)+1)-x_sp(load1.dofSp2(1)-1)));K*0.5*abs((x_sp(load1.dofSpm2+1)-x_sp(load1.dofSpm2-3)));K*0.5*abs((x_sp(load1.dofSp2(end)-1)-x_sp(load1.dofSp2(end)-3)))];
 end
 [Ener,grad_E_l,Hess_E_l] = Energy(x_long,icode);
 if icode>1
