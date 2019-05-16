@@ -120,18 +120,18 @@ for ielem = 1:nelem
         grad_Ee=grad_Ee + S*B0 * undeformed1.dvol0(ig);            
         S_=[S(1) S(3); S(3) S(2)];
         H=DNDX'*S_*DNDX;
-        if ielem < 41
-            H=H+[0 0 0 0;
-                 0 load1.Ks(ielem) 0 load1.Ks(ielem);
-                 0 0 0 0;
-                 0 0 0 0];
-        end
-        if ielem > 80
-            H=H+[0 0 0 0;
-                 0 0 0 0;
-                 0 0 0 0;
-                 0 load1.Ks2(ielem) 0 load1.Ks2(ielem)];
-        end
+%         if ielem < 41
+%             H=H+[0 0 0 0;
+%                  0 load1.Ks(ielem) 0 load1.Ks(ielem);
+%                  0 0 0 0;
+%                  0 0 0 0];
+%         end
+%         if ielem > 80
+%             H=H+[0 0 0 0;
+%                  0 0 0 0;
+%                  0 0 0 0;
+%                  0 load1.Ks2(ielem-80) 0 load1.Ks2(ielem-80)];
+%         end
         HH=zeros(8);
         HH(1:2:8,1:2:8)=H;
         HH(2:2:8,2:2:8)=H;
@@ -143,6 +143,12 @@ end
 
 Ener = Ener - load1.force'*x - load1.Ensp;
 grad_E = grad_E - load1.force + load1.fsp;
+  for Ihess=2:2:load1.dofSp(end) 
+      Hess_E(Ihess,Ihess)=Hess_E(Ihess,Ihess)+load1.Ks(Ihess/2); 
+  end
+  for Ihess=2:2:length(load1.dofSp) 
+      Hess_E(Ihess,Ihess)=Hess_E(Ihess,Ihess)+load1.Ks(Ihess/2); 
+  end 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 end
 
