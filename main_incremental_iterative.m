@@ -11,11 +11,11 @@ global mod1 mesh1 load1 el1 undeformed1
 example=2;
 material=3;
 spring=1;   % 1 - with spring, 0 - without
-K=0.0001;        % Spring constant
+K=0.1;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
 %Equilibrate
-options.n_iter_max=200;
+options.n_iter_max=80;
 options.tol_x=1.e-6;
 options.tol_f=1.e-6;
 options.info=3;
@@ -89,7 +89,7 @@ ylabel('Force')
 %Solve the same problem using the linear theory of elasticity
 [u,Reaction,delta] = linear_elasticity(codeLoad,lambda(end),example,CC1,dof_force,dof_disp);
 hold on
-%plot([0 -(delta)],[0,abs(Reaction)],'k-')
+plot([0 -(delta)],[0,abs(Reaction)],'k-')
 legend('Nonlinear elasticity','Linear elasticity')
 figure(1)
 hold on

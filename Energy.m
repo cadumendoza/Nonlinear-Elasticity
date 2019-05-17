@@ -131,6 +131,27 @@ end
 
 Ener = Ener - load1.force'*x - load1.Ensp;
 grad_E = grad_E - load1.force;
+
+%Elastic Foundation Stiffness and Loads
+ihess=1;
+for Ihess=2:2:length(load1.dofSp)
+  Hess_E(Ihess,Ihess)=Hess_E(Ihess,Ihess)+load1.Ks(ihess);
+  ihess=ihess+1;
+end
+ihess=1;
+for Ihess=load1.dofSp2(1):2:load1.dofSp2(end) 
+Hess_E(Ihess,Ihess)=Hess_E(Ihess,Ihess)+load1.Ks2(ihess);
+ihess=ihess+1;
+end
+
+for Ihess=load1.dofSp(1):2:load1.dofSp(end)
+  grad_E(Ihess)=grad_E(Ihess)+load1.fsp(Ihess);
+end
+for Ihess=load1.dofSp2(1):2:load1.dofSp2(end) 
+grad_E(Ihess)=grad_E(Ihess)+load1.fsp2(Ihess);
+end
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 end
 

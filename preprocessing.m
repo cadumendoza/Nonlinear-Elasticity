@@ -111,13 +111,16 @@ x_eq=mesh1.x0;
 CC0=1:(nx+1):((ny)*(nx+1)+1);
 CC1=(nx+1):(nx+1):((ny+1)*(nx+1));
 CCsp1=1:1:(nx+1);
-%CCsp2=((ny+1)*(nx+1)-nx):1:((ny+1)*(nx+1));
+CCsp2=((ny+1)*(nx+1)-nx):1:((ny+1)*(nx+1));
 dofCC0=[2*CC0'-1
     2*CC0'];
 if spring == 1
     dofCCsp=[2*CCsp1'];
+    dofCCsp2=[2*CCsp2'];
     load1.dofSp=dofCCsp;
+    load1.dofSp2=dofCCsp2;
     load1.fixedSp=x_eq(load1.dofSp);
+    load1.fixedSp2=x_eq(load1.dofSp2);
 end
 if codeLoad==0          % dead load, confined
     load1.dofCC=[dofCC0; 2*CC1'];
