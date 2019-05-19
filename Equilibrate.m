@@ -42,16 +42,20 @@ switch options.method
         ( (err_x>options.tol_x) | ...
         (err_f>options.tol_f))
       iter=iter+1;
-      dx = -Hess_E\grad_E;        
-    
+      dx = -Hess_E\grad_E;   
+      
+      %Condition to search descent direction
       if options.linesearch==1
-          direction=dx'*grad_E;
-          if (direction)>0 
-              disp('reverse direction')
+          %Solution obtained by NR
+          sign=dx'*grad_E;
+          %Verification
+          if (sign)>0 
+              %Changing the direction
               dx=-dx;
-              direction=-direction;
+              sign=-sign;
           end
-          [x_short, t]=LineSearch(x_short,dx,Ener,direction,options,spring,K);
+          %Calls Line-Search
+          [x_short, t]=LineSearch(x_short,dx,Ener,sign,options,spring,K);
       else
           t=1;
           x_short=x_short+dx;

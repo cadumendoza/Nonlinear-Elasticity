@@ -4,3 +4,5 @@ Check_Derivatives\.asv
 *.m~
 
 *.asv
+
+\.DS_Store
