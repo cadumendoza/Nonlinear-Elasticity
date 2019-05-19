@@ -13,7 +13,7 @@ x_BC = x(load1.dofCC);
 x0_BC=x_eq(load1.dofCC);
 u_BC=x_BC-x0_BC;
 
-[E_eq,grad_eq, K0] = Energy(x_eq,3);
+[E_eq,grad_eq, K0] = Energy(x_eq,3,0);
 L=zeros(size(K0,1),load1.ndofCC);
 Zero_M=zeros(load1.ndofCC,load1.ndofCC);
 for i=1:load1.ndofCC

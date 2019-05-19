@@ -9,15 +9,15 @@ global mod1 mesh1 load1 el1 undeformed1
 % 4: arch, dead load at center of the arch
 % 5: arch, dead load near the supports
 example=2;
-material=3;
+material=1;
 spring=1;   % 1 - with spring, 0 - without
-K=0.1;        % Spring constant
+K=0.04;        % Spring constant
 [dof_force, dof_disp, lambda, x_eq, CC0, CC1, force, codeLoad]=preprocessing(example,material,spring);
 
 %Equilibrate
-options.n_iter_max=80;
+options.n_iter_max=100;
 options.tol_x=1.e-6;
-options.tol_f=1.e-6;
+options.tol_f=1.e-3;
 options.info=3;
 options.method=1; %0: vanilla Newton-Rapshon, 1: Newton-Rapshon
 %11: Modified NR, 2: L-BFGS, 3: Conjugate Gradient
@@ -59,7 +59,7 @@ for iload=1:length(lambda)
     %Solve the equilibrium nonlinear system of equations
     [x_eq,iflag,iter,E_eq] = Equilibrate(x,options,spring,K);
     
-    [E_eq,grad_eq] = Energy(x_eq,3);
+    [E_eq,grad_eq] = Energy(x_eq,3,spring);
     history_E(iload)=E_eq;
     history_x(iload,:)=x_eq;
     switch example
@@ -93,4 +93,4 @@ plot([0 -(delta)],[0,abs(Reaction)],'k-')
 legend('Nonlinear elasticity','Linear elasticity')
 figure(1)
 hold on
-DibujaMalla(mesh1.T,mesh1.x0,mesh1.x0,'k',1)
+DibujaMalla(mesh1.T,mesh1.x0,mesh1.x0+u,'k',1)

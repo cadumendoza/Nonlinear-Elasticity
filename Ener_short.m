@@ -7,7 +7,9 @@ load1.Ks=zeros(41,1);
 
 if spring == 1
     x_sp=x_long;
+    %Force in the inferior elements
     force_sp=zeros(41,1);
+    %Force in the superior elements
     force_sp2=zeros(41,1);
     load1.dofSpm=load1.dofSp(2:end-1); %degrees of freedom of each y node to assign spring
     force_sp(2:end-1)=-K*0.5*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3))).*(x_sp(load1.dofSpm)-load1.fixedSp(2:end-1));
@@ -17,14 +19,19 @@ if spring == 1
     force_sp2(2:end-1)=-K*0.5*abs((x_sp(load1.dofSpm2+1)-x_sp(load1.dofSpm2-3))).*(x_sp(load1.dofSpm2)-load1.fixedSp2(2:end-1));
     force_sp2(1)=-K*0.5*abs((x_sp(load1.dofSp2(1)+1)-x_sp(load1.dofSp2(1)-1))).*(x_sp(load1.dofSp2(1))-load1.fixedSp2(1));
     force_sp2(end)=-K*0.5*abs((x_sp(load1.dofSp2(end)-1)-x_sp(load1.dofSp2(end)-3))).*(x_sp(load1.dofSp2(end))-load1.fixedSp2(end));
+    %Energy by the both layers of springs
     load1.Ensp=0.5*force_sp'*(x_sp(load1.dofSp)-load1.fixedSp)+0.5*force_sp2'*(x_sp(load1.dofSp2)-load1.fixedSp2);
+    %Force in the inferior springs
     load1.fsp(load1.dofSp)=-force_sp;
+    %Force in the superior springs
     load1.fsp2(load1.dofSp2)=-force_sp2;
+    %Stiffness due the inferior springs
     load1.Ks=[K*0.5*abs((x_sp(load1.dofSp(1)+1)-x_sp(load1.dofSp(1)-1)));K*0.5*abs((x_sp(load1.dofSpm+1)-x_sp(load1.dofSpm-3)));K*0.5*abs((x_sp(load1.dofSp(end)-1)-x_sp(load1.dofSp(end)-3)))];
+    %Stiffness due the superior springs
     load1.Ks2=[K*0.5*abs((x_sp(load1.dofSp2(1)+1)-x_sp(load1.dofSp2(1)-1)));K*0.5*abs((x_sp(load1.dofSpm2+1)-x_sp(load1.dofSpm2-3)));K*0.5*abs((x_sp(load1.dofSp2(end)-1)-x_sp(load1.dofSp2(end)-3)))];
 end
 
-[Ener,grad_E_l,Hess_E_l] = Energy(x_long,icode);
+[Ener,grad_E_l,Hess_E_l] = Energy(x_long,icode,spring);
 if icode>1
 [grad_E] = short(grad_E_l);
 end

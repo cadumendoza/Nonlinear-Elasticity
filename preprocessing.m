@@ -12,7 +12,7 @@ switch example
         nx=10;ny=10;
         lambda=[0:0.03:1.]; codeLoad=0;  % 0 for applied force and 1 for applied displacement
         codeLoad=0;
-        mod1.force = 6e0;
+        mod1.force = -2e0;
     case 1 %upsetting of a block, imposed displacements
         x1=0;x2=1;
         y1=0;y2=1;
@@ -110,12 +110,16 @@ x_eq=mesh1.x0;
 %Fixed dofs
 CC0=1:(nx+1):((ny)*(nx+1)+1);
 CC1=(nx+1):(nx+1):((ny+1)*(nx+1));
+%Inferior spring nodes
 CCsp1=1:1:(nx+1);
+%Superior spring nodes
 CCsp2=((ny+1)*(nx+1)-nx):1:((ny+1)*(nx+1));
 dofCC0=[2*CC0'-1
     2*CC0'];
 if spring == 1
+    %Inferior spring degrees of freedom
     dofCCsp=[2*CCsp1'];
+    %Superior spring degrees of freedom
     dofCCsp2=[2*CCsp2'];
     load1.dofSp=dofCCsp;
     load1.dofSp2=dofCCsp2;
